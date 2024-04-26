@@ -1,0 +1,9 @@
+Metadata-Version: 2.1
+Name: src
+Version: 0.0.1
+Summary: A package for movies recommendation
+Author-email: gabrielgamarques1@gmail.com
+Requires-Python: >=3.7
+Description-Content-Type: text/markdown
+
+Movies recommender system
