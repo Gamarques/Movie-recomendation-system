@@ -14,8 +14,13 @@ def fetch_poster(movie_id):
     return full_path
 
 def recommend(movie):
-    index = movies[movies['title'] == movie].index[0]
-    distances = sorted(list(enumerate(similarity[index])), reverse=True, key= lambda x: x[1])
+    movie_row = movies[movies['title'] == movie]
+    if len(movie_row) == 0:
+        st.error("O filme selecionado não foi encontrado.")
+        return [], []
+
+    index = movie_row.index[0]
+    distances = sorted(list(enumerate(similarity[index])), reverse=True, key=lambda x: x[1])
     recommended_movies_name = []
     recommended_movies_poster = []
     for i in distances[1:6]:
@@ -23,6 +28,7 @@ def recommend(movie):
         recommended_movies_poster.append(fetch_poster(movie_id))
         recommended_movies_name.append(movies.iloc[i[0]].title)
     return recommended_movies_name, recommended_movies_poster
+
 
 st.header("Movie Recommendation System Using Machine Learning")
 movies = pickle.load(open('artifacts/movie_list.pkl', 'rb'))
@@ -38,7 +44,22 @@ def get_movie_id(movie_name):
     movie_row = movies.loc[movies['title'] == movie_name]
     return movie_row.iloc[0]['movie_id']
 
-if st.button('Show_recomendation'):
-   movieId = get_movie_id(selected_movie)
-   poster= fetch_poster(movieId)
-   st.image(poster)
+if st.button('Show Recommendation'):
+    recommended_movie_names,recommended_movie_posters = recommend(selected_movie)
+    col1, col2, col3, col4, col5 = st.columns(5)
+    with col1:
+        st.text(recommended_movie_names[0])
+        st.image(recommended_movie_posters[0])
+    with col2:
+        st.text(recommended_movie_names[1])
+        st.image(recommended_movie_posters[1])
+
+    with col3:
+        st.text(recommended_movie_names[2])
+        st.image(recommended_movie_posters[2])
+    with col4:
+        st.text(recommended_movie_names[3])
+        st.image(recommended_movie_posters[3])
+    with col5:
+        st.text(recommended_movie_names[4])
+        st.image(recommended_movie_posters[4])
